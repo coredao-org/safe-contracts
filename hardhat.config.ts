@@ -120,7 +120,7 @@ const userConfig: HardhatUserConfig = {
     fantomTestnet: {
       ...sharedNetworkConfig,
       url: `https://rpc.testnet.fantom.network/`,
-    }
+    },
   },
   deterministicDeployment,
   namedAccounts: {
@@ -130,13 +130,29 @@ const userConfig: HardhatUserConfig = {
     timeout: 2000000,
   },
   etherscan: {
-    apiKey: ETHERSCAN_API_KEY,
+    apiKey: {
+        custom: ETHERSCAN_API_KEY,
+    },
+    customChains: [{
+        network: "custom",
+        chainId: 1116,
+        urls: {
+            apiURL: "https://openapi.coredao.org",
+            browserURL: "https://scan.coredao.org"
+        }
+    }]
   },
 };
 if (NODE_URL) {
   userConfig.networks!!.custom = {
     ...sharedNetworkConfig,
     url: NODE_URL,
+    verify: {
+        etherscan: {
+            apiKey: ETHERSCAN_API_KEY,
+            apiUrl: "https://openapi.coredao.org",
+        }
+    }
   }
 }
 export default userConfig
